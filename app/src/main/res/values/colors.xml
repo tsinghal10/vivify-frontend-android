@@ -17,7 +17,7 @@
 
     <!-- dots active colors -->
     <color name="dot_light_screen1">#f98da5</color>
-
+    <color name="primary">#87226B</color>
     <!-- Placeholder colors-->
     <color name="stay_color">#999999</color>
 

@@ -4,7 +4,7 @@
               android:id="@+id/layout_linear"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:background="@color/colorPrimary"
+              android:background="@color/primary"
               android:orientation="vertical"
               android:gravity="center">
 <ImageView android:layout_width="wrap_content"

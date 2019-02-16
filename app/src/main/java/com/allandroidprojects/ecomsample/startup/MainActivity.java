@@ -22,6 +22,8 @@ import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
+import com.allandroidprojects.ecomsample.utility.PrefManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +33,18 @@ public class MainActivity extends AppCompatActivity
     public static int notificationCountCart = 0;
     static ViewPager viewPager;
     static TabLayout tabLayout;
+    private PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefManager = new PrefManager(this);
+        if(!prefManager.isLoggedIn()) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

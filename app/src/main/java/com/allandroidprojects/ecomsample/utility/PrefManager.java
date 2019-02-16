@@ -17,12 +17,22 @@ public class PrefManager {
     // Shared preferences constants
     private static final String PREF_NAME = "MyPreference";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
+    private static final String IS_LOGGED_IN = "IsLoggedIn";
 
 
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public boolean isLoggedIn() {
+        return pref.getBoolean(IS_LOGGED_IN, false);
+    }
+
+    public void setIsLoggedIn() {
+        editor.putBoolean(IS_LOGGED_IN, true);
+        editor.commit();
     }
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
