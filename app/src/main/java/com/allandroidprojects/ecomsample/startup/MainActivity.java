@@ -129,6 +129,10 @@ public class MainActivity extends AppCompatActivity
             invalidateOptionsMenu();*/
             startActivity(new Intent(MainActivity.this, CartListActivity.class));
 
+            //test_logout
+            prefManager.setIsLoggedIn(false);
+            //test_logout_end
+
            /* notificationCount=0;//clear notification count
             invalidateOptionsMenu();*/
             return true;

@@ -30,8 +30,8 @@ public class PrefManager {
         return pref.getBoolean(IS_LOGGED_IN, false);
     }
 
-    public void setIsLoggedIn() {
-        editor.putBoolean(IS_LOGGED_IN, true);
+    public void setIsLoggedIn(Boolean flag) {
+        editor.putBoolean(IS_LOGGED_IN, flag);
         editor.commit();
     }
 
