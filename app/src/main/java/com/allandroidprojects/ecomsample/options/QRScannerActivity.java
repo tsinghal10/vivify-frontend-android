@@ -27,7 +27,7 @@ public class QRScannerActivity extends AppCompatActivity {
 
         qrscanner = new IntentIntegrator(this);
         qrscanner.initiateScan();
-        finish();
+//        finish();
     }
 
     @Override
