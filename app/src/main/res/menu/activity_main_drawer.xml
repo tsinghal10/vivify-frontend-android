@@ -50,6 +50,10 @@
                 android:id="@+id/my_account"
                 android:icon="@drawable/ic_person_black_24dp"
                 android:title="@string/my_account" />
+            <item
+                android:id="@+id/qr_scanner"
+                android:icon="@drawable/ic_qr_scanner_24dp"
+                android:title="QR Scanner"/>
         </menu>
     </item>
 

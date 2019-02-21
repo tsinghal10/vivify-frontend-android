@@ -63,7 +63,8 @@
         <activity
             android:name=".user.ProfileActivity"
             android:label="@string/my_profile" />
-        <activity android:name=".user.RegisterActivity"></activity>
+        <activity android:name=".user.RegisterActivity" />
+        <activity android:name=".options.QRScannerActivity"></activity>
     </application>
 
 </manifest>

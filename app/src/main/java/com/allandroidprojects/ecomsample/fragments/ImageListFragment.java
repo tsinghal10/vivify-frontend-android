@@ -66,18 +66,18 @@ public class ImageListFragment extends Fragment {
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(layoutManager);
         }*/
-        String[] items=null;
-        if (ImageListFragment.this.getArguments().getInt("type") == 1){
-            items =ImageUrlUtils.getOffersUrls();
-        }else if (ImageListFragment.this.getArguments().getInt("type") == 2){
-            items =ImageUrlUtils.getElectronicsUrls();
-        }else if (ImageListFragment.this.getArguments().getInt("type") == 3){
-            items =ImageUrlUtils.getLifeStyleUrls();
-        }else if (ImageListFragment.this.getArguments().getInt("type") == 4){
-            items =ImageUrlUtils.getHomeApplianceUrls();
-        }else if (ImageListFragment.this.getArguments().getInt("type") == 5){
-            items =ImageUrlUtils.getBooksUrls();
-        }else {
+        String[] items = null;
+        if (ImageListFragment.this.getArguments().getInt("type") == 1) {
+            items = ImageUrlUtils.getElectronicsUrls();
+        } else if (ImageListFragment.this.getArguments().getInt("type") == 2) {
+            items = ImageUrlUtils.getElectronicsUrls();
+        } else if (ImageListFragment.this.getArguments().getInt("type") == 3) {
+            items = ImageUrlUtils.getLifeStyleUrls();
+        } else if (ImageListFragment.this.getArguments().getInt("type") == 4) {
+            items = ImageUrlUtils.getHomeApplianceUrls();
+        } else if (ImageListFragment.this.getArguments().getInt("type") == 5) {
+            items = ImageUrlUtils.getBooksUrls();
+        } else {
             items = ImageUrlUtils.getImageUrls();
         }
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -159,7 +159,7 @@ public class ImageListFragment extends Fragment {
                     imageUrlUtils.addWishlistImageUri(mValues[position]);
                     holder.mImageViewWishlist.setImageResource(R.drawable.ic_favorite_black_18dp);
                     notifyDataSetChanged();
-                    Toast.makeText(mActivity,"Item added to wishlist.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "Item added to wishlist.", Toast.LENGTH_SHORT).show();
 
                 }
             });

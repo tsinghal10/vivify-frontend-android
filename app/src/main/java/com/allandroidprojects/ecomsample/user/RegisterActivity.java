@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                 finish();
                             } else {
-                                Snackbar errorSnackbar = Snackbar.make(view, "User Name already Exists", 2000);
+                                Snackbar errorSnackbar = Snackbar.make(view, "Email Id already Exists", 2000);
                                 errorSnackbar.show();
                             }
                         }

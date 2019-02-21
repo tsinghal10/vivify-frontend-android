@@ -2,6 +2,7 @@ package com.allandroidprojects.ecomsample.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,14 +14,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
+import com.allandroidprojects.ecomsample.options.QRScannerActivity;
 import com.allandroidprojects.ecomsample.user.ProfileActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
@@ -28,9 +32,21 @@ import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
 import com.allandroidprojects.ecomsample.user.LoginActivity;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
+import com.allandroidprojects.ecomsample.utility.RetrofitClient;
+import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -45,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         prefManager = new PrefManager(this);
-        if(!prefManager.isLoggedIn()) {
+        if (!prefManager.isLoggedIn()) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }
@@ -56,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -69,8 +85,8 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-         viewPager = (ViewPager) findViewById(R.id.viewpager);
-         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -116,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         // Get the notifications MenuItem and
         // its LayerDrawable (layer-list)
         MenuItem item = menu.findItem(R.id.action_cart);
-        NotificationCountSetClass.setAddToCart(MainActivity.this, item,notificationCountCart);
+        NotificationCountSetClass.setAddToCart(MainActivity.this, item, notificationCountCart);
         // force the ActionBar to relayout its MenuItems.
         // onCreateOptionsMenu(Menu) will be called again.
         invalidateOptionsMenu();
@@ -134,7 +150,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_search) {
             startActivity(new Intent(MainActivity.this, SearchResultActivity.class));
             return true;
-        }else if (id == R.id.action_cart) {
+        } else if (id == R.id.action_cart) {
 
            /* NotificationCountSetClass.setAddToCart(MainActivity.this, item, notificationCount);
             invalidateOptionsMenu();*/
@@ -147,7 +163,7 @@ public class MainActivity extends AppCompatActivity
            /* notificationCount=0;//clear notification count
             invalidateOptionsMenu();*/
             return true;
-        }else {
+        } else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
 
         }
@@ -156,36 +172,69 @@ public class MainActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
+
+        //API call to get products
+//        Call<ResponseBody> call = RetrofitClient
+//                .getInstance()
+//                .getApi()
+//                .get_products();
+//
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                try {
+//                    String returnBodytext = response.body().string();
+//
+//                    Log.e("\n\n\n\n\nhooo\n\n\n", new Gson().toJson(response.body()));
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
         ImageListFragment fragment = new ImageListFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("type", 1);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_1));
+
         fragment = new ImageListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 2);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_2));
+
         fragment = new ImageListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 3);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_3));
+
         fragment = new ImageListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 4);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_4));
+
         fragment = new ImageListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 5);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_5));
+
         fragment = new ImageListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 6);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_6));
+
         viewPager.setAdapter(adapter);
     }
 
@@ -205,17 +254,17 @@ public class MainActivity extends AppCompatActivity
             viewPager.setCurrentItem(3);
         } else if (id == R.id.nav_item5) {
             viewPager.setCurrentItem(4);
-        }else if (id == R.id.nav_item6) {
+        } else if (id == R.id.nav_item6) {
             viewPager.setCurrentItem(5);
-        }else if (id == R.id.my_wishlist) {
+        } else if (id == R.id.my_wishlist) {
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
-        }else if (id == R.id.my_cart) {
+        } else if (id == R.id.my_cart) {
             startActivity(new Intent(MainActivity.this, CartListActivity.class));
-        }else if (id == R.id.my_account) {
+        } else if (id == R.id.my_account) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-
-        }
-        else {
+        } else if (id == R.id.qr_scanner) {
+            startActivity(new Intent(MainActivity.this, QRScannerActivity.class));
+        } else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }
 
