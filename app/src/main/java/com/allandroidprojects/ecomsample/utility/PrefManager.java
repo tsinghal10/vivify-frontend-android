@@ -18,12 +18,22 @@ public class PrefManager {
     private static final String PREF_NAME = "MyPreference";
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String IS_LOGGED_IN = "IsLoggedIn";
+    private static final String USER_NAME = "UserName";
 
 
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+    }
+
+    public void setUserName(String userName) {
+        editor.putString(USER_NAME, userName);
+        editor.commit();
+    }
+
+    public String getUserName() {
+        return pref.getString(USER_NAME, "Hello World!");
     }
 
     public boolean isLoggedIn() {

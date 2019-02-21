@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "https://9b07a956.ngrok.io/api/";
+    private static final String BASE_URL = "https://8e958466.ngrok.io/api/";
     private static RetrofitClient mInstance;
     private Retrofit retrofit;
 

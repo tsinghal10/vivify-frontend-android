@@ -15,9 +15,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
+import com.allandroidprojects.ecomsample.miscellaneous.ProfileActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
@@ -56,6 +60,12 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        //Displaying user name
+        View headerView = navigationView.getHeaderView(0);
+        TextView user_name = (TextView) headerView.findViewById(R.id.userName);
+        user_name.setText(prefManager.getUserName());
+
         navigationView.setNavigationItemSelectedListener(this);
 
          viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -200,7 +210,11 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
         }else if (id == R.id.my_cart) {
             startActivity(new Intent(MainActivity.this, CartListActivity.class));
-        }else {
+        }else if (id == R.id.my_account) {
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+
+        }
+        else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }
 
