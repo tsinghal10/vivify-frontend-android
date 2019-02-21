@@ -58,10 +58,12 @@
         </activity>
         <activity android:name=".miscellaneous.EmptyActivity" />
         <activity
-            android:name=".startup.LoginActivity"
+            android:name=".user.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".miscellaneous.ProfileActivity"
-            android:label="@string/my_profile"></activity>
+        <activity
+            android:name=".user.ProfileActivity"
+            android:label="@string/my_profile" />
+        <activity android:name=".user.RegisterActivity"></activity>
     </application>
 
 </manifest>

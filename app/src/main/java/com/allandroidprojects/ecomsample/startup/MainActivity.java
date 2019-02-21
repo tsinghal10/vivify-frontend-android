@@ -21,11 +21,12 @@ import android.widget.TextView;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
-import com.allandroidprojects.ecomsample.miscellaneous.ProfileActivity;
+import com.allandroidprojects.ecomsample.user.ProfileActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
+import com.allandroidprojects.ecomsample.user.LoginActivity;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 
 import java.util.ArrayList;

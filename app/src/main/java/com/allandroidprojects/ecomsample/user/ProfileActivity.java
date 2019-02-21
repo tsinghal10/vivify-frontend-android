@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.miscellaneous;
+package com.allandroidprojects.ecomsample.user;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

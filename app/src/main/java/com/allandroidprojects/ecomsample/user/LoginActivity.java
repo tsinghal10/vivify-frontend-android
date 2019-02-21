@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.startup;
+package com.allandroidprojects.ecomsample.user;
 
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -10,8 +10,10 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.startup.MainActivity;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 
@@ -84,6 +86,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        TextView register = (TextView) findViewById(R.id.register_user);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
     }
 
     Boolean validate(String email) {
