@@ -33,8 +33,8 @@ public class WishlistActivity extends AppCompatActivity {
         mContext = WishlistActivity.this;
 
         ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
-        ArrayList<String> wishlistImageUri =imageUrlUtils.getWishlistImageUri();
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+        ArrayList<String> wishlistImageUri = imageUrlUtils.getWishlistImageUri();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager recylerViewLayoutManager = new LinearLayoutManager(mContext);
 
         recyclerView.setLayoutManager(recylerViewLayoutManager);
@@ -52,6 +52,7 @@ public class WishlistActivity extends AppCompatActivity {
             public final SimpleDraweeView mImageView;
             public final LinearLayout mLayoutItem;
             public final ImageView mImageViewWishlist;
+
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
@@ -91,7 +92,7 @@ public class WishlistActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ItemDetailsActivity.class);
-                    intent.putExtra(STRING_IMAGE_URI,mWishlistImageUri.get(position));
+                    intent.putExtra(STRING_IMAGE_URI, mWishlistImageUri.get(position));
                     intent.putExtra(STRING_IMAGE_POSITION, position);
                     mContext.startActivity(intent);
                 }

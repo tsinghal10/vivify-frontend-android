@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.startup.MainActivity;
@@ -21,6 +22,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 /**
  * A login screen that offers login via email/password.
@@ -68,6 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (response.body() != null) {  //Succesful login
                                 prefManager.setIsLoggedIn(true);
                                 prefManager.setUserName(email);
+                                Toast.makeText(LoginActivity.this, "Signin Successful", LENGTH_LONG).show();
+
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
                             } else { //Invalid credentials
