@@ -19,6 +19,7 @@ public class PrefManager {
     private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String USER_NAME = "UserName";
+    private static final String AUTHENTICATE = "IsAuthenticated";
 
 
     public PrefManager(Context context) {
@@ -54,4 +55,12 @@ public class PrefManager {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
+    public void setAuthenticate(boolean authenticate){
+        editor.putBoolean(AUTHENTICATE, authenticate);
+        editor.commit();
+    }
+
+    public boolean isAuthenticated(){
+        return pref.getBoolean(AUTHENTICATE, false);
+    }
 }

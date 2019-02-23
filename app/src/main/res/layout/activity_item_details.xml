@@ -36,26 +36,22 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Denim Shirt"
+                    android:text=""
                     android:textColor="@color/gen_black"
                     android:textSize="16dp" />
 
                 <TextView
+                    android:id="@+id/item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Rs. 1,979"
+                    android:text=""
                     android:textColor="@color/gen_black"
                     android:textSize="20dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="FREE Delivery"
-                    android:textSize="12dp" />
             </LinearLayout>
 
             <View
@@ -72,7 +68,7 @@
                 android:weightSum="3">
 
                 <LinearLayout
-                    android:id="@+id/layout_action1"
+                    android:id="@+id/share_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -103,7 +99,7 @@
                     android:background="@color/grey_light" />
 
                 <LinearLayout
-                    android:id="@+id/layout_action2"
+                    android:id="@+id/similar_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -134,7 +130,7 @@
                     android:background="@color/grey_light" />
 
                 <LinearLayout
-                    android:id="@+id/layout_action3"
+                    android:id="@+id/wish_list_layout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -143,6 +139,7 @@
                     android:weightSum="2">
 
                     <ImageView
+                        android:id="@+id/wish_list_active"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_favorite_border_black_18dp" />
@@ -176,31 +173,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Details"
+                    android:text="Description"
                     android:textColor="@color/gen_black"
                     android:textSize="16dp" />
 
                 <TextView
+                    android:id="@+id/item_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="\u2022 Regular fit, full sleeve"
-                    android:textColor="@color/gen_black"
-                    android:textSize="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="\u2022 Fabric: Cotton"
-                    android:textColor="@color/gen_black"
-                    android:textSize="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="\u2022 Pattern: printed"
+                    android:text=""
                     android:textColor="@color/gen_black"
                     android:textSize="12dp" />
 
@@ -218,7 +200,7 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/text_action_bottom1"
+            android:id="@+id/add_to_cart_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -226,11 +208,11 @@
             android:gravity="center"
             android:text="ADD TO CART"
             android:textColor="@color/gen_black"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/text_action_bottom2"
+            android:id="@+id/buy_now_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -238,7 +220,7 @@
             android:gravity="center"
             android:text="BUY NOW"
             android:textColor="@color/gen_white"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

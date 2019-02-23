@@ -26,7 +26,15 @@ public interface Api {
             @Field("password") String password
     );
 
-    @FormUrlEncoded
     @GET("custom_products/")
     Call<ResponseBody> get_products();
+
+    @GET("products/{id}/")
+    Call<ResponseBody> get_product_details(@Path("id") String id);
+
+    @FormUrlEncoded
+    @POST("qr/")
+    Call<ResponseBody> authenticateQR(
+            @Field("id") int id
+    );
 }

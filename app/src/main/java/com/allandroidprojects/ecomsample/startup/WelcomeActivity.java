@@ -17,9 +17,21 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
+import com.allandroidprojects.ecomsample.utility.RetrofitClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -30,6 +42,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private int[] layouts;
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,7 +1,9 @@
 package com.allandroidprojects.ecomsample.startup;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -25,18 +27,22 @@ import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
 import com.allandroidprojects.ecomsample.options.QRScannerActivity;
+import com.allandroidprojects.ecomsample.product.ProductInfo;
 import com.allandroidprojects.ecomsample.user.ProfileActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
 import com.allandroidprojects.ecomsample.user.LoginActivity;
+import com.allandroidprojects.ecomsample.utility.Api;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -47,6 +53,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,6 +62,10 @@ public class MainActivity extends AppCompatActivity
     static ViewPager viewPager;
     static TabLayout tabLayout;
     private PrefManager prefManager;
+
+    public static ArrayList<ProductInfo> book;
+
+    Dialog loadScreenDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_main);
+
+//        showLoadScreen();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -85,13 +99,62 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        Call<ResponseBody> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .get_products();
 
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-            tabLayout.setupWithViewPager(viewPager);
-        }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.body() != null) {
+                    try {
+                        try {
+                            JSONArray json = new JSONArray(response.body().string());
+                            book = new ArrayList<ProductInfo>();
+                            String url, name, pclass, id, price;
+                            for (int i = 0; i < json.length(); i++) {
+
+                                JSONObject temp = (JSONObject) json.get(i);
+                                if (temp.getString("product_class").equals("Book")) {
+                                    if (temp.getJSONArray("images").length() != 0) {
+                                        JSONObject temp1 = (JSONObject) temp.getJSONArray("images").get(0);
+                                        url = temp1.getString("original");
+                                    } else
+                                        url = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
+                                    id = temp.getString("id");
+                                    name = temp.getString("title");
+                                    pclass = temp.getString("product_class");
+
+                                    price = "Rs. 150";              //Get from API
+
+                                    ProductInfo product = new ProductInfo(id, name, pclass, url, price);
+                                    book.add(product);
+                                }
+                            }
+//                        loadScreenDialog.dismiss();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    viewPager = (ViewPager) findViewById(R.id.viewpager);
+                    tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+                    if (viewPager != null) {
+                        setupViewPager(viewPager);
+                        tabLayout.setupWithViewPager(viewPager);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -172,32 +235,6 @@ public class MainActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-
-        //API call to get products
-//        Call<ResponseBody> call = RetrofitClient
-//                .getInstance()
-//                .getApi()
-//                .get_products();
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                try {
-//                    String returnBodytext = response.body().string();
-//
-//                    Log.e("\n\n\n\n\nhooo\n\n\n", new Gson().toJson(response.body()));
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
         ImageListFragment fragment = new ImageListFragment();
         Bundle bundle = new Bundle();
@@ -300,5 +337,12 @@ public class MainActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+    }
+
+    public void showLoadScreen() {
+        View view = getLayoutInflater().inflate(R.layout.layout_splashscreen, null);
+        loadScreenDialog = new Dialog(this, R.style.AppTheme);
+        loadScreenDialog.setContentView(view);
+        loadScreenDialog.show();
     }
 }

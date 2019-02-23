@@ -1,5 +1,7 @@
 package com.allandroidprojects.ecomsample.utility;
 
+import com.allandroidprojects.ecomsample.startup.MainActivity;
+
 import java.util.ArrayList;
 
 /**

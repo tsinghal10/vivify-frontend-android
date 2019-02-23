@@ -1,5 +1,6 @@
 package com.allandroidprojects.ecomsample.options;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,14 +12,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.startup.MainActivity;
 
 public class SearchResultActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         handleIntent(getIntent());
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -35,6 +39,18 @@ public class SearchResultActivity extends AppCompatActivity {
         searchView.setFocusable(true);
         searchItem.expandActionView();
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.qr_search) {
+            Intent intent = new Intent(SearchResultActivity.this, QRScannerActivity.class);
+            intent.putExtra("from", SearchResultActivity.class.toString());
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
