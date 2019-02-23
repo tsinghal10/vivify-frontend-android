@@ -72,27 +72,31 @@ public class ItemDetailsActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    JSONObject jsonObject = (JSONObject) new JSONObject(response.body().string());
-                    itemName = jsonObject.getString("title");
-                    productDesc = jsonObject.getString("description");
-                    if (jsonObject.getJSONArray("images").length() != 0) {
-                        JSONObject temp1 = (JSONObject) jsonObject.getJSONArray("images").get(0);
-                        imageUri = temp1.getString("original");
-                    } else
-                        imageUri = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
+                if (response.code() != 404) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) new JSONObject(response.body().string());
+                        itemName = jsonObject.getString("title");
+                        productDesc = jsonObject.getString("description");
+                        if (jsonObject.getJSONArray("images").length() != 0) {
+                            JSONObject temp1 = (JSONObject) jsonObject.getJSONArray("images").get(0);
+                            imageUri = temp1.getString("original");
+                        } else
+                            imageUri = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Uri uri = Uri.parse(imageUri);
+                    mImageView.setImageURI(uri);
+                    textViewItemName.setText(itemName);
+                    textViewItemPrice.setText(productPrice);
+                    textViewItemDesc.setText(productDesc);
+                } else {
+                    Toast.makeText(ItemDetailsActivity.this, "Sorry! The product is not available", Toast.LENGTH_LONG).show();
                 }
-
-                Uri uri = Uri.parse(imageUri);
-                mImageView.setImageURI(uri);
-                textViewItemName.setText(itemName);
-                textViewItemPrice.setText(productPrice);
-                textViewItemDesc.setText(productDesc);
             }
 
             @Override

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.product.ItemDetailsActivity;
+import com.allandroidprojects.ecomsample.startup.MainActivity;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 import com.google.zxing.Result;
@@ -47,6 +48,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
         super.onPause();
         mScannerView.stopCamera();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -67,7 +69,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
                 linearLayout.removeView(mScannerView);
                 linearLayout.setVisibility(View.GONE);
                 finish();
-            } else {
+            } else if (getIntent().getStringExtra("from").equals(MainActivity.class.toString())) {
                 Call<ResponseBody> call = RetrofitClient
                         .getInstance()
                         .getApi()
@@ -82,7 +84,7 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
                         } else if (response.code() == 400) {
                             Toast.makeText(QRScannerActivity.this, "Please Try Again!", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(QRScannerActivity.this, "Hello!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(QRScannerActivity.this, "QR not Scanned!", Toast.LENGTH_LONG).show();
                         }
                         linearLayout.removeView(mScannerView);
                         linearLayout.setVisibility(View.GONE);
@@ -96,6 +98,9 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
                 });
 
             }
+        }
+        else{
+            Toast.makeText(QRScannerActivity.this,"QR not Scanned",Toast.LENGTH_LONG).show();
         }
     }
 

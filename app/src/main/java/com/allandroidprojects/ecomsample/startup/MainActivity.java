@@ -300,7 +300,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.my_account) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         } else if (id == R.id.qr_scanner) {
-            startActivity(new Intent(MainActivity.this, QRScannerActivity.class));
+            Intent intent = new Intent(MainActivity.this, QRScannerActivity.class);
+            intent.putExtra("from", MainActivity.class.toString());
+            startActivity(intent);
         } else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }
