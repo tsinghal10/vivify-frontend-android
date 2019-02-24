@@ -8,6 +8,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface Api {
 
@@ -27,7 +28,8 @@ public interface Api {
     );
 
     @GET("custom_products/")
-    Call<ResponseBody> get_products();
+    Call<ResponseBody> get_products(@Query("page") int page,
+                                    @Query("q") String q);
 
     @GET("products/{id}/")
     Call<ResponseBody> get_product_details(@Path("id") String id);
@@ -37,4 +39,7 @@ public interface Api {
     Call<ResponseBody> authenticateQR(
             @Field("id") int id
     );
+
+    @GET("custom_products/")
+    Call<ResponseBody> get_search(@Query("q") String q);
 }

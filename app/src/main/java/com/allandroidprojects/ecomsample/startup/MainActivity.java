@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity
     private PrefManager prefManager;
 
     public static ArrayList<ProductInfo> book;
+    public static String nextPageURL;
+
+
+    public static int page[] = {1, 1, 1, 1, 1, 1};          //Category page
 
     Dialog loadScreenDialog;
 
@@ -80,6 +84,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 //        showLoadScreen();
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,73 +105,15 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        Call<ResponseBody> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .get_products();
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.body() != null) {
-                    try {
-                        try {
-                            JSONArray json = new JSONArray(response.body().string());
-                            book = new ArrayList<ProductInfo>();
-                            String url, name, pclass, id, price;
-                            for (int i = 0; i < json.length(); i++) {
-
-                                JSONObject temp = (JSONObject) json.get(i);
-                                if (temp.getString("product_class").equals("Book")) {
-                                    if (temp.getJSONArray("images").length() != 0) {
-                                        JSONObject temp1 = (JSONObject) temp.getJSONArray("images").get(0);
-                                        url = temp1.getString("original");
-                                    } else
-                                        url = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
-                                    id = temp.getString("id");
-                                    name = temp.getString("title");
-                                    pclass = temp.getString("product_class");
-
-                                    price = "Rs. 150";              //Get from API
-
-                                    ProductInfo product = new ProductInfo(id, name, pclass, url, price);
-                                    book.add(product);
-                                }
-                            }
-//                        loadScreenDialog.dismiss();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    viewPager = (ViewPager) findViewById(R.id.viewpager);
-                    tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-                    if (viewPager != null) {
-                        setupViewPager(viewPager);
-                        tabLayout.setupWithViewPager(viewPager);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        if (viewPager != null) {
+            setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
+
 
     @Override
     protected void onResume() {
@@ -339,6 +287,7 @@ public class MainActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+
     }
 
     public void showLoadScreen() {
