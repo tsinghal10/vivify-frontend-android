@@ -2,6 +2,7 @@ package com.allandroidprojects.ecomsample.utility;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -19,6 +20,9 @@ public interface Api {
             @Field("password") String password
     );
 
+    @DELETE("login/")
+    Call<ResponseBody> logout();
+
     @FormUrlEncoded
     @POST("register/")
     Call<ResponseBody> register(
@@ -29,7 +33,7 @@ public interface Api {
 
     @GET("custom_products/")
     Call<ResponseBody> get_products(@Query("page") int page,
-                                    @Query("q") String q);
+                                                    @Query("q") String q);
 
     @GET("products/{id}/")
     Call<ResponseBody> get_product_details(@Path("id") String id);
@@ -40,6 +44,9 @@ public interface Api {
             @Field("id") int id
     );
 
-    @GET("custom_products/")
-    Call<ResponseBody> get_search(@Query("q") String q);
+    @FormUrlEncoded
+    @POST("basket/myadd/")
+    Call<ResponseBody> add_to_cart(
+            @Field("url") String url,
+            @Field("quantity") int quantity);
 }

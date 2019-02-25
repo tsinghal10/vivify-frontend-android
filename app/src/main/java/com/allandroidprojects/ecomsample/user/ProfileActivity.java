@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.product.ItemDetailsActivity;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 
@@ -19,6 +21,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+//Logout no done. call delete in login api
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -42,8 +46,25 @@ public class ProfileActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                prefManager.setIsLoggedIn(false);
-                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                Call<ResponseBody> call = RetrofitClient
+                        .getInstance()
+                        .getApi()
+                        .logout();
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        prefManager.setIsLoggedIn(false);
+                        Toast.makeText(ProfileActivity.this, "Logout Successful", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         });
     }

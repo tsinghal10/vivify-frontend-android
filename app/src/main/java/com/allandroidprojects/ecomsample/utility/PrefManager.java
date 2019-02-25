@@ -20,6 +20,7 @@ public class PrefManager {
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String USER_NAME = "UserName";
     private static final String AUTHENTICATE = "IsAuthenticated";
+    private static final String USER_ID = "UserId";
 
 
     public PrefManager(Context context) {
@@ -31,6 +32,15 @@ public class PrefManager {
     public void setUserName(String userName) {
         editor.putString(USER_NAME, userName);
         editor.commit();
+    }
+
+    public void setUserId(String userId) {
+        editor.putString(USER_ID, userId);
+        editor.commit();
+    }
+
+    public String getUserId() {
+        return pref.getString(USER_ID, "-1");
     }
 
     public String getUserName() {

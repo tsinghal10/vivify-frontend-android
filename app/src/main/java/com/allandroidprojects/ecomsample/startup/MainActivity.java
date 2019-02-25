@@ -2,6 +2,7 @@ package com.allandroidprojects.ecomsample.startup;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.Snackbar;
@@ -62,18 +63,23 @@ public class MainActivity extends AppCompatActivity
     static ViewPager viewPager;
     static TabLayout tabLayout;
     private PrefManager prefManager;
+    public static ArrayList<ProductInfo> lists[] = new ArrayList[6];
+    public static String categoryList[] = {"the", "Book", "is", "the", "good", "other"};
 
     public static ArrayList<ProductInfo> book;
     public static String nextPageURL;
 
 
-    public static int page[] = {1, 1, 1, 1, 1, 1};          //Category page
+    public static int page[] = {2, 2, 2, 2, 2, 2};          //Category page
 
     Dialog loadScreenDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        for(int i=0; i<6; i++)
+            lists[i] = new ArrayList<>();
 
         prefManager = new PrefManager(this);
         if (!prefManager.isLoggedIn()) {
@@ -82,10 +88,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_main);
-
-//        showLoadScreen();
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -108,10 +110,9 @@ public class MainActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-            tabLayout.setupWithViewPager(viewPager);
-        }
+        AsyncApiCalls api = new AsyncApiCalls();
+        api.execute();
+
     }
 
 
@@ -289,6 +290,94 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+    private class AsyncApiCalls extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void ... aVoid) {
+            for(int i=0; i<6; i++) {
+                callApi(i);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoadScreen();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            loadScreenDialog.dismiss();
+            if (viewPager != null) {
+                setupViewPager(viewPager);
+                tabLayout.setupWithViewPager(viewPager);
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+    }
+
+    public static void callApi(final int position) {
+
+        Call<ResponseBody> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .get_products(1, categoryList[position]);
+
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.body() != null) {
+                    try {
+                        try {
+                            JSONObject jsonObject = (JSONObject) new JSONObject((response.body().string()));
+                            JSONArray json = jsonObject.getJSONArray("results");
+                            String url, name, id, price;
+                            for (int i = 0; i < json.length(); i++) {
+
+                                JSONObject temp = (JSONObject) json.get(i);
+                                if (temp.getJSONArray("images").length() != 0) {
+                                    JSONObject temp1 = (JSONObject) temp.getJSONArray("images").get(0);
+                                    url = temp1.getString("original");
+                                } else
+                                    url = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
+                                id = temp.getString("id");
+                                name = temp.getString("title");
+
+                                price = temp.getJSONObject("price").getString("currency") + " " +
+                                        temp.getJSONObject("price").getString("incl_tax");             //Get from API
+
+                                ProductInfo product = new ProductInfo(id, name, url, price);
+
+                                lists[position].add(product);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+    }
+
 
     public void showLoadScreen() {
         View view = getLayoutInflater().inflate(R.layout.layout_splashscreen, null);

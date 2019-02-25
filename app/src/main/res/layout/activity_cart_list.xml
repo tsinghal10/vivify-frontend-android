@@ -20,7 +20,7 @@
         android:visibility="gone">
 
         <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/recyclerview"
+            android:id="@+id/cart_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
@@ -40,7 +40,7 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/text_action_bottom1"
+            android:id="@+id/total_price"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -52,7 +52,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/text_action_bottom2"
+            android:id="@+id/payment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

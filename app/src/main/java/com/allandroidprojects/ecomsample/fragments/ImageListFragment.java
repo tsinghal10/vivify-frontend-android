@@ -17,6 +17,7 @@
 package com.allandroidprojects.ecomsample.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -53,6 +54,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.allandroidprojects.ecomsample.startup.MainActivity.categoryList;
+
 
 public class ImageListFragment extends Fragment {
 
@@ -63,17 +66,13 @@ public class ImageListFragment extends Fragment {
     private static RecyclerView rv;
 
     private static int category_position;
-    public static ArrayList<ProductInfo> lists[] = new ArrayList[6];
     public static Boolean isLoading[] = {false, false, false, false, false, false};
-    public static String categoryList[] = {"The", "Book", "is", "the", "good", "other"};
     public static SimpleStringRecyclerViewAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (MainActivity) getActivity();
-        for (int i = 0; i < 6; i++)
-            lists[i] = new ArrayList<>();
     }
 
     @Override
@@ -84,6 +83,7 @@ public class ImageListFragment extends Fragment {
         return rv;
     }
 
+    //pagination
     private void initScrollListener() {
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -101,8 +101,8 @@ public class ImageListFragment extends Fragment {
                     int arr[] = new int[2];
                     if (staggeredGridLayoutManager != null) {
                         arr = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(arr);
-                        if (Math.max(arr[0], arr[1]) == lists[category_position].size() - 1) {
-                            callApi(true);
+                        if (Math.max(arr[0], arr[1]) == MainActivity.lists[category_position].size() - 1) {
+                            callApi(true, category_position);
                             isLoading[category_position] = true;
                         }
                     }
@@ -113,19 +113,18 @@ public class ImageListFragment extends Fragment {
 
     private void setupRecyclerView() {
         category_position = ImageListFragment.this.getArguments().getInt("type") - 1;
-        adapter = new SimpleStringRecyclerViewAdapter(rv, lists[category_position]);
+        adapter = new SimpleStringRecyclerViewAdapter(rv, MainActivity.lists[category_position]);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(adapter);
-        callApi(false);
     }
 
-    private void callApi(final Boolean isLoadMore) {
+    public static void callApi(final Boolean isLoadMore, final int position) {
 
         Call<ResponseBody> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .get_products(MainActivity.page[category_position], categoryList[category_position]);
+                .get_products(MainActivity.page[position], categoryList[position]);
 
         call.enqueue(new Callback<ResponseBody>() {
 
@@ -136,7 +135,7 @@ public class ImageListFragment extends Fragment {
                         try {
                             JSONObject jsonObject = (JSONObject) new JSONObject((response.body().string()));
                             JSONArray json = jsonObject.getJSONArray("results");
-                            String url, name, pclass, id, price;
+                            String url, name, id, price;
                             for (int i = 0; i < json.length(); i++) {
 
                                 JSONObject temp = (JSONObject) json.get(i);
@@ -153,12 +152,12 @@ public class ImageListFragment extends Fragment {
 
                                 ProductInfo product = new ProductInfo(id, name, url, price);
 
-                                lists[category_position].add(product);
+                                MainActivity.lists[position].add(product);
                             }
                             adapter.notifyDataSetChanged();
-                            MainActivity.page[category_position] += 1;
+                            MainActivity.page[position] += 1;
                             if (isLoadMore)
-                                isLoading[category_position] = false;
+                                isLoading[position] = false;
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -180,9 +179,6 @@ public class ImageListFragment extends Fragment {
 
     public static class SimpleStringRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
-
-        private final int VIEW_TYPE_ITEM = 0;
-        private final int VIEW_TYPE_LOADING = 1;
 
         private ArrayList<ProductInfo> list;
         private RecyclerView mRecyclerView;
@@ -245,7 +241,6 @@ public class ImageListFragment extends Fragment {
                         intent.putExtra(ITEM_ID, list.get(position).getProduct_id());
                         intent.putExtra(STRING_IMAGE_POSITION, position);
                         mActivity.startActivity(intent);
-
                     }
                 });
 

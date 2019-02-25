@@ -28,6 +28,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/cart_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Denim Shirt"
@@ -35,24 +36,20 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/cart_item_des"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Slim fit, cotton"
+                android:text=""
                 android:textSize="@dimen/text_size_small" />
 
             <TextView
+                android:id="@+id/cart_item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="Rs. 8,999"
                 android:textColor="#4CAF50"
                 android:textSize="@dimen/text_size_xmedium" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delivery charge: FREE"
-                android:textSize="@dimen/text_size_small" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,16 +58,18 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/cart_item_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Qty: 1"
                     android:textSize="@dimen/text_size_small" />
 
                 <TextView
+                    android:id="@+id/cart_item_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_medium"
-                    android:text="Size: 41"
+                    android:text=""
                     android:textSize="@dimen/text_size_small" />
             </LinearLayout>
         </LinearLayout>
@@ -90,7 +89,7 @@
         android:weightSum="2">
 
         <LinearLayout
-            android:id="@+id/layout_action1"
+            android:id="@+id/layout_item_remove"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -155,4 +154,3 @@
         android:layout_marginTop="8dp"
         android:background="@color/grey_light" />
 </LinearLayout>
-

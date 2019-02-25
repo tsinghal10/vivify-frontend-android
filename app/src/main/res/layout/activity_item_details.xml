@@ -52,6 +52,15 @@
                     android:textColor="@color/gen_black"
                     android:textSize="20dp" />
 
+                <TextView
+                    android:id="@+id/item_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
             </LinearLayout>
 
             <View

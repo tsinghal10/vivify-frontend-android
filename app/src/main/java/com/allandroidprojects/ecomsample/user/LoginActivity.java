@@ -18,6 +18,11 @@ import com.allandroidprojects.ecomsample.startup.MainActivity;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,18 +72,19 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+//                            System.out.println("\n\n"+response.toString()+"\n\n");
                             if (response.body() != null) {  //Succesful login
                                 prefManager.setIsLoggedIn(true);
                                 prefManager.setUserName(email);
                                 Toast.makeText(LoginActivity.this, "Signin Successful", LENGTH_LONG).show();
-
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
+
                             } else { //Invalid credentials
                                 Snackbar errorSnackbar = Snackbar.make(view, "Invalid credentials", 2000);
                                 errorSnackbar.show();
                             }
+
                         }
 
                         @Override
@@ -86,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                             Snackbar errorSnackbar = Snackbar.make(view, t.getMessage(), 2000);
                             errorSnackbar.show();
                         }
+
                     });
                 }
             }

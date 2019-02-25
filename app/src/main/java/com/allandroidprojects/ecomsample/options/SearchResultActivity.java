@@ -47,6 +47,8 @@ import retrofit2.Response;
 import static com.allandroidprojects.ecomsample.fragments.ImageListFragment.ITEM_ID;
 import static com.allandroidprojects.ecomsample.fragments.ImageListFragment.STRING_IMAGE_POSITION;
 
+// On scroll lode more items pagination not done.
+
 public class SearchResultActivity extends AppCompatActivity {
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -56,6 +58,9 @@ public class SearchResultActivity extends AppCompatActivity {
     private SearchAdapter adapter;
     private ArrayList<ProductInfo> productInfoArrayList;
     private String speechResult;
+    static private String query;
+    public static int search_page = 1;
+    public static boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,37 @@ public class SearchResultActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new SearchAdapter(recyclerView, productInfoArrayList);
         recyclerView.setAdapter(adapter);
+        initScrollListener();
         handleIntent(getIntent());
+    }
+
+    //pagination
+    private void initScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+
+                if (!isLoading) {
+                    int arr[] = new int[2];
+                    if (staggeredGridLayoutManager != null) {
+                        arr = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(arr);
+                        if (Math.max(arr[0], arr[1]) == productInfoArrayList.size() - 1) {
+//                            Toast.makeText(this, "Load More", Toast.LENGTH_LONG).show();
+                            callApi();
+                            isLoading = true;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -104,6 +139,83 @@ public class SearchResultActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            query = intent.getStringExtra(SearchManager.QUERY);
+            if (query != null) {
+//                search_page = 1;
+//                isLoading = false;
+                productInfoArrayList.clear();
+                callApi();
+            }
+        }
+    }
+
+    private void callApi() {
+
+        Call<ResponseBody> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .get_products(search_page, query);
+
+        call.enqueue(new Callback<ResponseBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.body() != null) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) new JSONObject((response.body().string()));
+                        if (!jsonObject.getString("count").equals("0")) {
+                            JSONArray json = jsonObject.getJSONArray("results");
+                            String url, name, pclass, id, price;
+                            for (int i = 0; i < json.length(); i++) {
+
+                                JSONObject temp = (JSONObject) json.get(i);
+                                if (temp.getJSONArray("images").length() != 0) {
+                                    JSONObject temp1 = (JSONObject) temp.getJSONArray("images").get(0);
+                                    url = temp1.getString("original");
+                                } else
+                                    url = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
+                                id = temp.getString("id");
+                                name = temp.getString("title");
+
+                                price = temp.getJSONObject("price").getString("currency") + " " +
+                                        temp.getJSONObject("price").getString("incl_tax");
+
+                                ProductInfo product = new ProductInfo(id, name, url, price);
+                                productInfoArrayList.add(product);
+                            }
+                            Toast.makeText(SearchResultActivity.this, "Results Found", Toast.LENGTH_LONG).show();
+                            adapter.notifyDataSetChanged();
+                            search_page += 1;
+                        } else {
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(SearchResultActivity.this, "Results not found", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(SearchResultActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -131,89 +243,13 @@ public class SearchResultActivity extends AppCompatActivity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 //                    search_text_view.setText(result.get(0));
-                    speechResult=result.get(0);
-                    searchView.setQuery(speechResult,true);
+                    speechResult = result.get(0);
+                    searchView.setQuery(speechResult, true);
                 }
                 break;
             }
 
         }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            if (query != null) {
-                callApi(query);
-            }
-        }
-    }
-
-    private void callApi(String query) {
-
-        Call<ResponseBody> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .get_search(query);
-
-        call.enqueue(new Callback<ResponseBody>() {
-
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.body() != null) {
-                    try {
-                        try {
-                            JSONObject jsonObject = (JSONObject) new JSONObject((response.body().string()));
-                            if (!jsonObject.getString("count").equals("0")) {
-                                productInfoArrayList.clear();
-                                JSONArray json = jsonObject.getJSONArray("results");
-                                String url, name, pclass, id, price;
-                                for (int i = 0; i < json.length(); i++) {
-
-                                    JSONObject temp = (JSONObject) json.get(i);
-                                    if (temp.getJSONArray("images").length() != 0) {
-                                        JSONObject temp1 = (JSONObject) temp.getJSONArray("images").get(0);
-                                        url = temp1.getString("original");
-                                    } else
-                                        url = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
-                                    id = temp.getString("id");
-                                    name = temp.getString("title");
-
-                                    price = temp.getJSONObject("price").getString("currency") + " " +
-                                            temp.getJSONObject("price").getString("incl_tax");
-
-                                    ProductInfo product = new ProductInfo(id, name, url, price);
-
-                                    productInfoArrayList.add(product);
-                                }
-                                Toast.makeText(SearchResultActivity.this, "Results Found", Toast.LENGTH_LONG).show();
-                                adapter.notifyDataSetChanged();
-                            } else
-                                Toast.makeText(SearchResultActivity.this, "Results not found", Toast.LENGTH_LONG).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(SearchResultActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {

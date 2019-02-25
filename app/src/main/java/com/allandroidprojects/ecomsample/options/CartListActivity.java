@@ -61,7 +61,7 @@ public class CartListActivity extends AppCompatActivity {
                 mView = view;
                 mImageView = (SimpleDraweeView) view.findViewById(R.id.image_cartlist);
                 mLayoutItem = (LinearLayout) view.findViewById(R.id.layout_item_desc);
-                mLayoutRemove = (LinearLayout) view.findViewById(R.id.layout_action1);
+                mLayoutRemove = (LinearLayout) view.findViewById(R.id.layout_item_remove);
                 mLayoutEdit = (LinearLayout) view.findViewById(R.id.layout_action2);
             }
         }
@@ -102,7 +102,7 @@ public class CartListActivity extends AppCompatActivity {
                 }
             });
 
-           //Set click action
+            //Set click action
             holder.mLayoutRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -143,7 +143,7 @@ public class CartListActivity extends AppCompatActivity {
             layoutCartItems.setVisibility(View.GONE);
             layoutCartPayments.setVisibility(View.GONE);
 
-            Button bStartShopping = (Button) findViewById(R.id.bAddNew);
+            Button bStartShopping = (Button) findViewById(R.id.shop_now_button);
             bStartShopping.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
