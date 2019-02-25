@@ -49,4 +49,11 @@ public interface Api {
     Call<ResponseBody> add_to_cart(
             @Field("url") String url,
             @Field("quantity") int quantity);
+
+    // Get request to get cart list
+    @GET("basket/")
+    Call<ResponseBody> get_cart();
+
+    @GET("basket/{id}/lines/")
+    Call<ResponseBody> get_cart_list(@Field("id") String id);
 }

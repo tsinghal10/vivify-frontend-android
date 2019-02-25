@@ -6,6 +6,7 @@
     android:paddingBottom="@dimen/margin_medium">
 
     <LinearLayout
+        android:id="@+id/cart_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -120,7 +121,7 @@
             android:background="@color/grey_light" />
 
         <LinearLayout
-            android:id="@+id/layout_action2"
+            android:id="@+id/layout_item_edit"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

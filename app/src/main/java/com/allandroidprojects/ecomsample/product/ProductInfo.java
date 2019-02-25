@@ -6,9 +6,10 @@ public class ProductInfo {
 
     private String product_id;
     private String product_title;
-//    private String product_class;
+    //    private String product_class;
     private String img_url;
     private String product_price;
+    private String cart_quantity;
 
     public String getProduct_id() {
         return product_id;
@@ -50,10 +51,27 @@ public class ProductInfo {
         this.product_price = product_price;
     }
 
+    public void setCart_quantity(String cart_quantity) {
+        this.cart_quantity = cart_quantity;
+    }
+
+    public String getCart_quantity() {
+        return cart_quantity;
+    }
+
     public ProductInfo(String id, String name, String url, String product_price) {
         product_id = id;
         product_title = name;
         img_url = url;
-        this.product_price=product_price;
+        this.product_price = product_price;
+    }
+
+    public ProductInfo(String id, String name, String url, String product_price, String cart_quantity) {
+        product_id = id;
+        product_title = id;
+        img_url = url;
+        this.product_price = product_price;
+        this.cart_quantity = cart_quantity;
+
     }
 }

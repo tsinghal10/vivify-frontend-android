@@ -115,10 +115,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
             }
         });
 
+        // Api call for add to cart
         textViewAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Call api for add to cart
 //                System.out.println("\n\n"+product_url+"   "+quantity+" \n\n");
 //                product_url = "products/105/";
                 Call<ResponseBody> call = RetrofitClient
@@ -144,18 +144,38 @@ public class ItemDetailsActivity extends AppCompatActivity {
             }
         });
 
+        //api call for buy
         textViewBuyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
-                imageUrlUtils.addCartListImageUri(imageUri);
-                MainActivity.notificationCountCart++;
-                NotificationCountSetClass.setNotifyCount(MainActivity.notificationCountCart);
-                startActivity(new Intent(ItemDetailsActivity.this, CartListActivity.class));
+
+                Call<ResponseBody> call = RetrofitClient
+                        .getInstance()
+                        .getApi()
+                        .add_to_cart(product_url, quantity);
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        System.out.println(response.toString());
+                        Toast.makeText(ItemDetailsActivity.this, "Item added to cart.", Toast.LENGTH_SHORT).show();
+
+                        MainActivity.notificationCountCart++;
+                        NotificationCountSetClass.setNotifyCount(MainActivity.notificationCountCart);
+                        startActivity(new Intent(ItemDetailsActivity.this, CartListActivity.class));
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(ItemDetailsActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
         });
 
+        //api call for wishlist
         linearLayoutWishList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -59,8 +59,8 @@ public class SearchResultActivity extends AppCompatActivity {
     private ArrayList<ProductInfo> productInfoArrayList;
     private String speechResult;
     static private String query;
-    public static int search_page = 1;
-    public static boolean isLoading = false;
+    public int search_page = 1;
+    public boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
