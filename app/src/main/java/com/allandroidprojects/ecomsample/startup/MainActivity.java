@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
     public static int page[] = {2, 2, 2, 2, 2, 2};          //Category page
 
-    Dialog loadScreenDialog;
+    static Dialog loadScreenDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +110,13 @@ public class MainActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        AsyncApiCalls api = new AsyncApiCalls();
-        api.execute();
+//        showLoadScreen();
+
+        for (int i=0; i<6; i++)
+            callApi(i);
+
+//        AsyncApiCalls api = new AsyncApiCalls();
+//        api.execute();
 
     }
 
@@ -221,6 +226,7 @@ public class MainActivity extends AppCompatActivity
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_6));
 
+        viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(adapter);
     }
 
@@ -303,14 +309,13 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            showLoadScreen();
+//            super.onPreExecute();
+//            showLoadScreen();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            loadScreenDialog.dismiss();
             if (viewPager != null) {
                 setupViewPager(viewPager);
                 tabLayout.setupWithViewPager(viewPager);
@@ -324,7 +329,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public static void callApi(final int position) {
+    public void callApi(final int position) {
 
         Call<ResponseBody> call = RetrofitClient
                 .getInstance()
@@ -358,6 +363,13 @@ public class MainActivity extends AppCompatActivity
                                 ProductInfo product = new ProductInfo(id, name, url, price);
 
                                 lists[position].add(product);
+                            }
+                            if (position == 0){
+//                                loadScreenDialog.dismiss();
+                                if (viewPager != null) {
+                                    setupViewPager(viewPager);
+                                    tabLayout.setupWithViewPager(viewPager);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

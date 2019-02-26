@@ -96,9 +96,9 @@ public class SearchResultActivity extends AppCompatActivity {
                     if (staggeredGridLayoutManager != null) {
                         arr = staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(arr);
                         if (Math.max(arr[0], arr[1]) == productInfoArrayList.size() - 1) {
-//                            Toast.makeText(this, "Load More", Toast.LENGTH_LONG).show();
                             callApi();
                             isLoading = true;
+                            Toast.makeText(SearchResultActivity.this, "Loading..", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -150,8 +150,8 @@ public class SearchResultActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
             if (query != null) {
-//                search_page = 1;
-//                isLoading = false;
+                search_page = 1;
+                isLoading = true;
                 productInfoArrayList.clear();
                 callApi();
             }
@@ -192,9 +192,9 @@ public class SearchResultActivity extends AppCompatActivity {
                                 ProductInfo product = new ProductInfo(id, name, url, price);
                                 productInfoArrayList.add(product);
                             }
-                            Toast.makeText(SearchResultActivity.this, "Results Found", Toast.LENGTH_LONG).show();
                             adapter.notifyDataSetChanged();
                             search_page += 1;
+                            isLoading = false;
                         } else {
                             adapter.notifyDataSetChanged();
                             Toast.makeText(SearchResultActivity.this, "Results not found", Toast.LENGTH_LONG).show();

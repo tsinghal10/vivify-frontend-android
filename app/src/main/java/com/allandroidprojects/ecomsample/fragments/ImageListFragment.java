@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.product.ItemDetailsActivity;
 import com.allandroidprojects.ecomsample.product.ProductInfo;
 import com.allandroidprojects.ecomsample.startup.MainActivity;
@@ -104,6 +105,8 @@ public class ImageListFragment extends Fragment {
                         if (Math.max(arr[0], arr[1]) == MainActivity.lists[category_position].size() - 1) {
                             callApi(true, category_position);
                             isLoading[category_position] = true;
+                            Toast.makeText(mActivity, "Loading...", Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 }
@@ -111,8 +114,10 @@ public class ImageListFragment extends Fragment {
         });
     }
 
+
     private void setupRecyclerView() {
         category_position = ImageListFragment.this.getArguments().getInt("type") - 1;
+//        Toast.makeText(mActivity, ""+category_position, Toast.LENGTH_SHORT).show();
         adapter = new SimpleStringRecyclerViewAdapter(rv, MainActivity.lists[category_position]);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         rv.setLayoutManager(layoutManager);

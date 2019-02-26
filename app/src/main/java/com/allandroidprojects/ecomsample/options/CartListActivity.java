@@ -54,87 +54,90 @@ public class CartListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart_list);
         mContext = CartListActivity.this;
         cart_list = new ArrayList<>();
+        setCartLayout(MainActivity.notificationCountCart);
 
-        Call<ResponseBody> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .get_cart();
+//        Call<ResponseBody> call = RetrofitClient
+//                .getInstance()
+//                .getApi()
+//                .get_cart();
+//
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                try {
+//                    final JSONObject jsonObject = (JSONObject) new JSONObject(response.body().string());
+//                    list_id = jsonObject.getInt("id");
+//                    total_price = jsonObject.getString("currency") + " " + jsonObject.getString("total_incl_tax_excl_discounts");
+//
+//                    Call<ResponseBody> call1 = RetrofitClient
+//                            .getInstance()
+//                            .getApi()
+//                            .get_cart_list(String.valueOf(list_id));
+//
+//                    call1.enqueue(new Callback<ResponseBody>() {
+//                        @Override
+//                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                            try {
+//                                JSONObject jsonObject1 = (JSONObject) new JSONObject(response.body().string());
+//                                count = jsonObject1.getInt("count");
+//                                JSONArray jsonArray = jsonObject1.getJSONArray("results");
+//                                for (int i = 0; i < jsonArray.length(); i++) {
+//                                    JSONObject temp = (JSONObject) jsonArray.get(i);
+//                                    int quantity = temp.getInt("quantity");
+//                                    String price = temp.getString("price_currency") + " "
+//                                            + temp.getString("price_incl_tax_excl_discounts");
+//
+//                                    String product = temp.getString("product");
+//
+//                                    // call to get product detail not done
+//                                    int id = Integer.parseInt(product.substring(0));
+//                                    Call<ResponseBody> call2 = RetrofitClient
+//                                            .getInstance()
+//                                            .getApi()
+//                                            .get_product_details(String.valueOf(id));
+//
+//                                    call2.enqueue(new Callback<ResponseBody>() {
+//                                        @Override
+//                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    });
+//                                }
+//
+//                                setCartLayout(count);
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    });
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    final JSONObject jsonObject = (JSONObject) new JSONObject(response.body().string());
-                    list_id = jsonObject.getInt("id");
-                    total_price = jsonObject.getString("currency") + " " + jsonObject.getString("total_incl_tax_excl_discounts");
 
-                    Call<ResponseBody> call1 = RetrofitClient
-                            .getInstance()
-                            .getApi()
-                            .get_cart_list(String.valueOf(list_id));
-
-                    call1.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            try {
-                                JSONObject jsonObject1 = (JSONObject) new JSONObject(response.body().string());
-                                count = jsonObject1.getInt("count");
-                                JSONArray jsonArray = jsonObject1.getJSONArray("results");
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject temp = (JSONObject) jsonArray.get(i);
-                                    int quantity = temp.getInt("quantity");
-                                    String price = temp.getString("price_currency") + " "
-                                            + temp.getString("price_incl_tax_excl_discounts");
-
-                                    String product = temp.getString("product");
-
-                                    // call to get product detail not done
-                                    int id = Integer.parseInt(product.substring(0));
-                                    Call<ResponseBody> call2 = RetrofitClient
-                                            .getInstance()
-                                            .getApi()
-                                            .get_product_details(String.valueOf(id));
-
-                                    call2.enqueue(new Callback<ResponseBody>() {
-                                        @Override
-                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-
-                                setCartLayout(count);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
 //        ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
 //        ArrayList<String> cartlistImageUri =imageUrlUtils.getCartListImageUri();
         //Show cart layout based on items
@@ -151,7 +154,7 @@ public class CartListActivity extends AppCompatActivity {
         layoutCartPayments = (LinearLayout) findViewById(R.id.layout_payment);
         layoutCartNoItems = (LinearLayout) findViewById(R.id.layout_cart_empty);
 
-        if (MainActivity.notificationCountCart > 0) {
+        if (items > 0) {
             layoutCartNoItems.setVisibility(View.GONE);
             layoutCartItems.setVisibility(View.VISIBLE);
             layoutCartPayments.setVisibility(View.VISIBLE);
@@ -165,7 +168,8 @@ public class CartListActivity extends AppCompatActivity {
             bStartShopping.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(CartListActivity.this, MainActivity.class));
+//                    startActivity(new Intent(CartListActivity.this, MainActivity.class));
+                    finish();
                 }
             });
         }
