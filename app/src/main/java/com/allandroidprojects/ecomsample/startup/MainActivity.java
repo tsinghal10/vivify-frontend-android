@@ -1,15 +1,21 @@
 package com.allandroidprojects.ecomsample.startup;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,6 +43,8 @@ import com.allandroidprojects.ecomsample.options.WishlistActivity;
 import com.allandroidprojects.ecomsample.user.LoginActivity;
 import com.allandroidprojects.ecomsample.utility.Api;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
+import com.allandroidprojects.ecomsample.utility.PromptDialogFragment;
+import com.allandroidprojects.ecomsample.utility.PromptDialogFragment;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -46,6 +54,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,10 +91,10 @@ public class MainActivity extends AppCompatActivity
             lists[i] = new ArrayList<>();
 
         prefManager = new PrefManager(this);
-        if (!prefManager.isLoggedIn()) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-        }
+//        if (!prefManager.isLoggedIn()) {
+//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//            finish();
+//        }
 
         setContentView(R.layout.activity_main);
 
@@ -114,9 +123,6 @@ public class MainActivity extends AppCompatActivity
 
         for (int i=0; i<6; i++)
             callApi(i);
-
-//        AsyncApiCalls api = new AsyncApiCalls();
-//        api.execute();
 
     }
 
@@ -181,8 +187,9 @@ public class MainActivity extends AppCompatActivity
             invalidateOptionsMenu();*/
             return true;
         } else {
-            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
-
+//            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
+            PromptDialogFragment promtDialogFragment = new PromptDialogFragment();
+            promtDialogFragment.show(getFragmentManager(), "Promt User");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -293,38 +300,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
-        }
-
-    }
-
-    private class AsyncApiCalls extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void ... aVoid) {
-            for(int i=0; i<6; i++) {
-                callApi(i);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            super.onPreExecute();
-//            showLoadScreen();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (viewPager != null) {
-                setupViewPager(viewPager);
-                tabLayout.setupWithViewPager(viewPager);
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
         }
 
     }
