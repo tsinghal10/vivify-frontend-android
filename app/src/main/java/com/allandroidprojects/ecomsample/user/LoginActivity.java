@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -15,18 +16,25 @@ import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.startup.MainActivity;
+import com.allandroidprojects.ecomsample.utility.AddCookiesInterceptor;
+import com.allandroidprojects.ecomsample.utility.Api;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
+import com.allandroidprojects.ecomsample.utility.ReceivedCookiesInterceptor;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -63,6 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                     Snackbar errorSnackbar = Snackbar.make(view, "Password field is empty", 2000);
                     errorSnackbar.show();
                 } else {
+
+
                     //Call to login using retrofit
                     Call<ResponseBody> call = RetrofitClient
                             .getInstance()
@@ -72,10 +82,9 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                            System.out.println("\n\n"+response.toString()+"\n\n");
                             if (response.body() != null) {  //Succesful login
-                                prefManager.setIsLoggedIn(true);
                                 prefManager.setUserName(email);
+                                prefManager.setIsLoggedIn(true);
                                 Toast.makeText(LoginActivity.this, "Signin Successful", LENGTH_LONG).show();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();

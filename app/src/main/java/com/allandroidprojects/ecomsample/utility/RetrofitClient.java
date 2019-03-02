@@ -1,5 +1,9 @@
 package com.allandroidprojects.ecomsample.utility;
 
+import android.app.Activity;
+
+import com.allandroidprojects.ecomsample.user.LoginActivity;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -11,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "https://8481df04.ngrok.io/api/";
+    private static final String BASE_URL = "https://fa86cb46.ngrok.io/api/";
     private static RetrofitClient mInstance;
     private static Retrofit retrofit;
 

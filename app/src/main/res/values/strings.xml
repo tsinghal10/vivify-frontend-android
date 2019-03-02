@@ -10,11 +10,11 @@
     <string name="action_cart">Cart</string>
     <string name="action_notifications">Notifications</string>
 
-    <string name="item_1">Offers</string>
-    <string name="item_2">Electronics</string>
+    <string name="item_1">Grocery</string>
+    <string name="item_2">Books</string>
     <string name="item_3">Lifestyle</string>
     <string name="item_4">Home Appliances</string>
-    <string name="item_5">Books \u0026 More</string>
+    <string name="item_5">Cosmetics</string>
     <string name="item_6">More</string>
 
     <string name="my_profile">My Profile</string>
@@ -69,5 +69,6 @@
         completions."
     </string>
     <string name="new_user_register">New User? Register</string>
+    <string name="title_activity_order_history">OrderHistoryActivity</string>
 
 </resources>

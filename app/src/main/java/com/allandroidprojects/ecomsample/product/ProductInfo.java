@@ -68,10 +68,11 @@ public class ProductInfo {
 
     public ProductInfo(String id, String name, String url, String product_price, String cart_quantity) {
         product_id = id;
-        product_title = id;
+        product_title = name;
         img_url = url;
         this.product_price = product_price;
         this.cart_quantity = cart_quantity;
-
     }
+
+    public ProductInfo(String order_id, String )
 }

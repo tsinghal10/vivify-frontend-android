@@ -18,7 +18,11 @@ import com.allandroidprojects.ecomsample.fragments.ViewPagerActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.startup.MainActivity;
+import com.allandroidprojects.ecomsample.utility.AddCookiesInterceptor;
+import com.allandroidprojects.ecomsample.utility.Api;
 import com.allandroidprojects.ecomsample.utility.ImageUrlUtils;
+import com.allandroidprojects.ecomsample.utility.PrefManager;
+import com.allandroidprojects.ecomsample.utility.ReceivedCookiesInterceptor;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -29,10 +33,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.Serializable;
 
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ItemDetailsActivity extends AppCompatActivity {
     String imageUri;
@@ -43,6 +50,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
     String prodouctStock;
     String product_url;
     int quantity = 2;
+
+    PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         final TextView textViewBuyNow = (TextView) findViewById(R.id.buy_now_button);
         final TextView textViewItemStock = (TextView) findViewById(R.id.item_stock);
 
+        prefManager = new PrefManager(this);
         //Getting image uri from previous screen
         if (getIntent() != null) {
             productId = getIntent().getStringExtra(ImageListFragment.ITEM_ID);
@@ -121,10 +131,12 @@ public class ItemDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                System.out.println("\n\n"+product_url+"   "+quantity+" \n\n");
 //                product_url = "products/105/";
+
                 Call<ResponseBody> call = RetrofitClient
                         .getInstance()
                         .getApi()
-                        .add_to_cart(product_url, quantity);
+                        .add_to_cart(productId, quantity, prefManager.getUserName());
+
 
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -152,7 +164,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 Call<ResponseBody> call = RetrofitClient
                         .getInstance()
                         .getApi()
-                        .add_to_cart(product_url, quantity);
+                        .add_to_cart(productId, quantity, prefManager.getUserName());
 
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override

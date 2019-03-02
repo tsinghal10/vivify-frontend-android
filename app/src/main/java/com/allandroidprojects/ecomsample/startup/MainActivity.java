@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
+import com.allandroidprojects.ecomsample.options.OrderHistoryActivity;
 import com.allandroidprojects.ecomsample.options.QRScannerActivity;
 import com.allandroidprojects.ecomsample.product.ProductInfo;
 import com.allandroidprojects.ecomsample.user.ProfileActivity;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     static TabLayout tabLayout;
     private PrefManager prefManager;
     public static ArrayList<ProductInfo> lists[] = new ArrayList[6];
-    public static String categoryList[] = {"the", "Book", "is", "the", "good", "other"};
+    public static String categoryList[] = {"grocery", "book", "lifestyle", "the", "good", "other"};
 
     public static ArrayList<ProductInfo> book;
     public static String nextPageURL;
@@ -87,14 +88,14 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        for(int i=0; i<6; i++)
+        for (int i = 0; i < 6; i++)
             lists[i] = new ArrayList<>();
 
         prefManager = new PrefManager(this);
-//        if (!prefManager.isLoggedIn()) {
-//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//            finish();
-//        }
+        if (!prefManager.isLoggedIn()) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity
 
 //        showLoadScreen();
 
-        for (int i=0; i<6; i++)
+        for (int i = 0; i < 6; i++)
             callApi(i);
 
     }
@@ -179,17 +180,13 @@ public class MainActivity extends AppCompatActivity
             invalidateOptionsMenu();*/
             startActivity(new Intent(MainActivity.this, CartListActivity.class));
 
-            //test_logout
-            prefManager.setIsLoggedIn(false);
-            //test_logout_end
-
            /* notificationCount=0;//clear notification count
             invalidateOptionsMenu();*/
             return true;
         } else {
 //            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
             PromptDialogFragment promtDialogFragment = new PromptDialogFragment();
-            promtDialogFragment.show(getFragmentManager(), "Promt User");
+            promtDialogFragment.show(getFragmentManager(), "Prompt User");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -265,6 +262,13 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, QRScannerActivity.class);
             intent.putExtra("from", MainActivity.class.toString());
             startActivity(intent);
+        } else if (id == R.id.help_center) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setPackage("com.facebook.orca");
+            intent.setData(Uri.parse("https://m.me/373536113479082"));
+            startActivity(intent);
+        } else if (id == R.id.my_orders) {
+            startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
         } else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }
@@ -339,7 +343,7 @@ public class MainActivity extends AppCompatActivity
 
                                 lists[position].add(product);
                             }
-                            if (position == 0){
+                            if (position == 0) {
 //                                loadScreenDialog.dismiss();
                                 if (viewPager != null) {
                                     setupViewPager(viewPager);

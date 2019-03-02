@@ -62,7 +62,7 @@
                     android:id="@+id/cart_item_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Qty: 1"
+                    android:text="Qty: "
                     android:textSize="@dimen/text_size_small" />
 
                 <TextView

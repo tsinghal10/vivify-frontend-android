@@ -7,6 +7,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -33,7 +34,7 @@ public interface Api {
 
     @GET("custom_products/")
     Call<ResponseBody> get_products(@Query("page") int page,
-                                                    @Query("q") String q);
+                                    @Query("q") String q);
 
     @GET("products/{id}/")
     Call<ResponseBody> get_product_details(@Path("id") String id);
@@ -45,15 +46,24 @@ public interface Api {
     );
 
     @FormUrlEncoded
-    @POST("basket/myadd/")
+    @POST("basket/myadd/{id}/")
     Call<ResponseBody> add_to_cart(
-            @Field("url") String url,
-            @Field("quantity") int quantity);
+            @Path("id") String id,
+            @Field("quantity") int quantity,
+            @Field("email") String email);
 
     // Get request to get cart list
     @GET("basket/")
-    Call<ResponseBody> get_cart();
+    Call<ResponseBody> get_cart(@Query("email") String email);
 
     @GET("basket/{id}/lines/")
-    Call<ResponseBody> get_cart_list(@Field("id") String id);
+    Call<ResponseBody> get_cart_list(@Path("id") String id,
+                                     @Query("email") String email);
+
+    @FormUrlEncoded
+    @POST("checkout/")
+    Call<ResponseBody> checkout(@Query("email") String email, @Field("basket") String basket);
+
+    @GET("orders/")
+    Call<ResponseBody> order_list(@Query("email") String email);
 }

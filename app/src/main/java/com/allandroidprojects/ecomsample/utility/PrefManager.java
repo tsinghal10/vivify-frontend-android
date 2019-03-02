@@ -22,7 +22,6 @@ public class PrefManager {
     private static final String AUTHENTICATE = "IsAuthenticated";
     private static final String USER_ID = "UserId";
 
-
     public PrefManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -65,12 +64,12 @@ public class PrefManager {
         return pref.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
-    public void setAuthenticate(boolean authenticate){
+    public void setAuthenticate(boolean authenticate) {
         editor.putBoolean(AUTHENTICATE, authenticate);
         editor.commit();
     }
 
-    public boolean isAuthenticated(){
+    public boolean isAuthenticated() {
         return pref.getBoolean(AUTHENTICATE, false);
     }
 }
