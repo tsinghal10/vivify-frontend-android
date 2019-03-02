@@ -8,6 +8,7 @@
     android:paddingRight="20dp">
 
     <LinearLayout
+        android:id="@+id/order_item"
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_width="match_parent"

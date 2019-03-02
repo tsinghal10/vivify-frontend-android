@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +59,7 @@ public class CartListActivity extends AppCompatActivity {
     String basket_url;
     String total_price;
     int count;
+    private  static CartListActivity.SimpleStringRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class CartListActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.code() == 200) {
+                            MainActivity.notificationCountCart = 0;
                             Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -98,129 +101,12 @@ public class CartListActivity extends AppCompatActivity {
 //        setCartLayout(MainActivity.notificationCountCart);
         new GetCartTask().execute(prefManager.getUserName());
 
-//        Call<ResponseBody> call = RetrofitClient
-//                .getInstance()
-//                .getApi()
-//                .get_cart(prefManager.getUserName());
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                try {
-//                    final JSONObject jsonObject = (JSONObject) new JSONObject(response.body().string());
-//                    list_id = jsonObject.getInt("id");
-//
-//                    total_price = jsonObject.getString("currency") + " " + jsonObject.getString("total_incl_tax_excl_discounts");
-//                    TextView textViewPrice = (TextView) findViewById(R.id.total_price);
-//                    textViewPrice.setText(total_price);
-//
-//                    if (!jsonObject.getString("total_incl_tax_excl_discounts").equals("0.00")) {
-//
-//                        Call<ResponseBody> call1 = RetrofitClient
-//                                .getInstance()
-//                                .getApi()
-//                                .get_cart_list(String.valueOf(list_id),prefManager.getUserName());
-//
-//                        call1.enqueue(new Callback<ResponseBody>() {
-//                            @Override
-//                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                                try {
-//                                    if (response.body() != null) {
-//                                        JSONObject jsonObject1 = (JSONObject) new JSONObject(response.body().string());
-//                                        count = jsonObject1.getInt("count");
-//                                        setCartLayout(count);
-//                                        if (count != 0) {
-//                                            JSONArray jsonArray = jsonObject1.getJSONArray("results");
-//                                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                                JSONObject temp = (JSONObject) jsonArray.get(i);
-//                                                final int quantity = temp.getInt("quantity");
-//                                                final String price = temp.getString("price_currency") + " "
-//                                                        + temp.getString("price_incl_tax_excl_discounts");
-//
-//                                                String product = temp.getString("product");
-//
-//                                                // call to get product detail not done
-//                                                Retrofit retrofit = new Retrofit.Builder()
-//                                                        .baseUrl(product)
-//                                                        .addConverterFactory(GsonConverterFactory.create())
-//                                                        .build();
-//
-//                                                Call<ResponseBody> call2 = retrofit.create(Api.class).get_product_cart();
-//
-//                                                call2.enqueue(new Callback<ResponseBody>() {
-//                                                    @Override
-//                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                                                        String name = "", pid = "", imageUri = "";
-//                                                        try {
-//                                                            JSONArray jsonArray = (JSONArray) new JSONArray(response.body().string());
-//                                                            JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-//                                                            name = jsonObject.getString("title");
-//                                                            pid = jsonObject.getString("id");
-//                                                            if (jsonObject.getJSONArray("images").length() != 0) {
-//                                                                JSONObject temp1 = (JSONObject) jsonObject.getJSONArray("images").get(0);
-//                                                                imageUri = temp1.getString("original");
-//                                                            } else
-//                                                                imageUri = "https://www.azfinesthomes.com/assets/images/image-not-available.jpg";
-//
-//                                                        } catch (JSONException e) {
-//                                                            e.printStackTrace();
-//                                                        } catch (IOException e) {
-//                                                            e.printStackTrace();
-//                                                        }
-//                                                        ProductInfo prod = new ProductInfo(pid, name, imageUri, price, String.valueOf(quantity));
-//                                                        cart_list.add(prod);
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                                                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-//                                                    }
-//                                                });
-//                                            }
-//                                            adapter.notifyDataSetChanged();
-//                                        }
-//                                    }
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        });
-//                    } else
-//                        setCartLayout(0);
-////                    setCartLayout(count);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-
-
-//        ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
-//        ArrayList<String> cartlistImageUri =imageUrlUtils.getCartListImageUri();
         //Show cart layout based on items
-
-
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.cart_recyclerview);
         RecyclerView.LayoutManager recyclerViewLayoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
-        recyclerView.setAdapter(new CartListActivity.SimpleStringRecyclerViewAdapter(recyclerView, cart_list));
+        adapter = new CartListActivity.SimpleStringRecyclerViewAdapter(recyclerView, cart_list);
+        recyclerView.setAdapter(adapter);
     }
 
     protected void setCartLayout(int items) {
@@ -396,7 +282,7 @@ public class CartListActivity extends AppCompatActivity {
                                 Call<ResponseBody> call2 = RetrofitClient
                                         .getInstance()
                                         .getApi()
-                                        .get_product_details(pdid);
+                                        .get_product_details(pdid, prefManager.getUserName());
                                 String name = "", pid = "", imageUri = "";
                                 JSONArray jsonArray2 = (JSONArray) new JSONArray(call2.execute().body().string());
                                 JSONObject jsonObject2 = (JSONObject) jsonArray2.get(0);

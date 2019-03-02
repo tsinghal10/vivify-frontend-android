@@ -83,7 +83,8 @@
         <activity android:name=".options.QRScannerActivity" />
         <activity
             android:name=".options.OrderHistoryActivity"
-            android:label="Order History"></activity>
+            android:label="Order History" />
+        <activity android:name=".options.OrderItemList"></activity>
     </application>
 
 </manifest>

@@ -33,11 +33,19 @@ public interface Api {
     );
 
     @GET("custom_products/")
-    Call<ResponseBody> get_products(@Query("page") int page,
-                                    @Query("q") String q);
+    Call<ResponseBody> get_products(
+            @Query("page") int page,
+            @Query("cat") String q);
+
+    @GET("custom_products/")
+    Call<ResponseBody> get_search_products(
+            @Query("page") int page,
+            @Query("q") String q);
 
     @GET("products/{id}/")
-    Call<ResponseBody> get_product_details(@Path("id") String id);
+    Call<ResponseBody> get_product_details(
+            @Path("id") String id,
+            @Query("email") String email);
 
     @FormUrlEncoded
     @POST("qr/")
@@ -60,10 +68,15 @@ public interface Api {
     Call<ResponseBody> get_cart_list(@Path("id") String id,
                                      @Query("email") String email);
 
+    @GET("orders/{id}/lines/")
+    Call<ResponseBody> get_orders(@Path("id") String id,
+                                     @Query("email") String email);
+
     @FormUrlEncoded
     @POST("checkout/")
     Call<ResponseBody> checkout(@Query("email") String email, @Field("basket") String basket);
 
     @GET("orders/")
     Call<ResponseBody> order_list(@Query("email") String email);
+
 }

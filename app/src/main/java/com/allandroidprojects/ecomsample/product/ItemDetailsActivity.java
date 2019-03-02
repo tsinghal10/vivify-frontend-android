@@ -2,7 +2,6 @@ package com.allandroidprojects.ecomsample.product;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,15 +13,11 @@ import android.widget.Toast;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
-import com.allandroidprojects.ecomsample.fragments.ViewPagerActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.startup.MainActivity;
-import com.allandroidprojects.ecomsample.utility.AddCookiesInterceptor;
-import com.allandroidprojects.ecomsample.utility.Api;
 import com.allandroidprojects.ecomsample.utility.ImageUrlUtils;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
-import com.allandroidprojects.ecomsample.utility.ReceivedCookiesInterceptor;
 import com.allandroidprojects.ecomsample.utility.RetrofitClient;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -31,15 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ItemDetailsActivity extends AppCompatActivity {
     String imageUri;
@@ -80,7 +71,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         Call<ResponseBody> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .get_product_details(productId);
+                .get_product_details(productId, prefManager.getUserName());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

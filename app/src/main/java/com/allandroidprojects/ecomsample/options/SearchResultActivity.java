@@ -163,7 +163,7 @@ public class SearchResultActivity extends AppCompatActivity {
         Call<ResponseBody> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .get_products(search_page, query);
+                .get_search_products(search_page, query);
 
         call.enqueue(new Callback<ResponseBody>() {
 
