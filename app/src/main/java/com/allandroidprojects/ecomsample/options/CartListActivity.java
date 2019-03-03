@@ -59,7 +59,7 @@ public class CartListActivity extends AppCompatActivity {
     String basket_url;
     String total_price;
     int count;
-    private  static CartListActivity.SimpleStringRecyclerViewAdapter adapter;
+    private static CartListActivity.SimpleStringRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,26 +73,30 @@ public class CartListActivity extends AppCompatActivity {
         textViewPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<ResponseBody> call = RetrofitClient
-                        .getInstance()
-                        .getApi()
-                        .checkout(prefManager.getUserName(), basket_url);
+                if (prefManager.isAuthenticated()) {
+                    Call<ResponseBody> call = RetrofitClient
+                            .getInstance()
+                            .getApi()
+                            .checkout(prefManager.getUserName(), basket_url);
 
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.code() == 200) {
-                            MainActivity.notificationCountCart = 0;
-                            Toast.makeText(mContext, "Payment Successful", Toast.LENGTH_SHORT).show();
-                            finish();
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if (response.code() == 200) {
+                                MainActivity.notificationCountCart = 0;
+                                prefManager.setAuthenticate(false);
+                                Toast.makeText(mContext, "Payment Successful and Check-Out", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else
+                    Toast.makeText(mContext, "Please Check-In First", Toast.LENGTH_SHORT).show();
 
             }
         });

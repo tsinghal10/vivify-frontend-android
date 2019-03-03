@@ -8,14 +8,12 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="action_cart">Cart</string>
-    <string name="action_notifications">Notifications</string>
+    <string name="action_notifications">Visual Search</string>
 
     <string name="item_1">Grocery</string>
     <string name="item_2">Books</string>
     <string name="item_3">Lifestyle</string>
-    <string name="item_4">Home Appliances</string>
-    <string name="item_5">Cosmetics</string>
-    <string name="item_6">More</string>
+    <string name="item_4">Electronics</string>
 
     <string name="my_profile">My Profile</string>
     <string name="my_rewards">My Rewards</string>

@@ -35,6 +35,7 @@ import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
 import com.allandroidprojects.ecomsample.options.OrderHistoryActivity;
 import com.allandroidprojects.ecomsample.options.QRScannerActivity;
+import com.allandroidprojects.ecomsample.options.RecommendActivity;
 import com.allandroidprojects.ecomsample.product.ProductInfo;
 import com.allandroidprojects.ecomsample.user.ProfileActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
@@ -43,6 +44,7 @@ import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
 import com.allandroidprojects.ecomsample.user.LoginActivity;
 import com.allandroidprojects.ecomsample.utility.Api;
+import com.allandroidprojects.ecomsample.utility.GoogleVision;
 import com.allandroidprojects.ecomsample.utility.PrefManager;
 import com.allandroidprojects.ecomsample.utility.PromptDialogFragment;
 import com.allandroidprojects.ecomsample.utility.PromptDialogFragment;
@@ -73,14 +75,14 @@ public class MainActivity extends AppCompatActivity
     static ViewPager viewPager;
     static TabLayout tabLayout;
     private PrefManager prefManager;
-    public static ArrayList<ProductInfo> lists[] = new ArrayList[6];
-    public static String categoryList[] = {"grocery", "book", "lifestyle", "the", "good", "other"};
+    public static ArrayList<ProductInfo> lists[] = new ArrayList[4];
+    public static String categoryList[] = {"grocery", "book", "lifestyle", "electronic"};
 
     public static ArrayList<ProductInfo> book;
     public static String nextPageURL;
 
 
-    public static int page[] = {2, 2, 2, 2, 2, 2};          //Category page
+    public static int page[] = {2, 2, 2, 2};          //Category page
 
     static Dialog loadScreenDialog;
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 4; i++)
             lists[i] = new ArrayList<>();
 
         prefManager = new PrefManager(this);
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
 //        showLoadScreen();
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 4; i++)
             callApi(i);
 
     }
@@ -183,10 +185,12 @@ public class MainActivity extends AppCompatActivity
            /* notificationCount=0;//clear notification count
             invalidateOptionsMenu();*/
             return true;
-        } else {
-//            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
-            PromptDialogFragment promtDialogFragment = new PromptDialogFragment();
-            promtDialogFragment.show(getFragmentManager(), "Prompt User");
+        } else { //Calling the Google Vision API
+
+//            PromptDialogFragment promtDialogFragment = new PromptDialogFragment();
+//            promtDialogFragment.show(getFragmentManager(), "Prompt User");
+            Intent i = new Intent(MainActivity.this, GoogleVision.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -194,8 +198,11 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
 
-        ImageListFragment fragment = new ImageListFragment();
-        Bundle bundle = new Bundle();
+        ImageListFragment fragment;
+        Bundle bundle;
+
+        fragment = new ImageListFragment();
+        bundle = new Bundle();
         bundle.putInt("type", 1);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_1));
@@ -218,17 +225,6 @@ public class MainActivity extends AppCompatActivity
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_4));
 
-        fragment = new ImageListFragment();
-        bundle = new Bundle();
-        bundle.putInt("type", 5);
-        fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_5));
-
-        fragment = new ImageListFragment();
-        bundle = new Bundle();
-        bundle.putInt("type", 6);
-        fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_6));
 
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(adapter);
@@ -248,10 +244,6 @@ public class MainActivity extends AppCompatActivity
             viewPager.setCurrentItem(2);
         } else if (id == R.id.nav_item4) {
             viewPager.setCurrentItem(3);
-        } else if (id == R.id.nav_item5) {
-            viewPager.setCurrentItem(4);
-        } else if (id == R.id.nav_item6) {
-            viewPager.setCurrentItem(5);
         } else if (id == R.id.my_wishlist) {
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
         } else if (id == R.id.my_cart) {
@@ -269,6 +261,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.my_orders) {
             startActivity(new Intent(MainActivity.this, OrderHistoryActivity.class));
+        } else if (id == R.id.recommends) {
+            startActivity(new Intent(MainActivity.this, RecommendActivity.class));
         } else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }
@@ -368,7 +362,6 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-
 
     public void showLoadScreen() {
         View view = getLayoutInflater().inflate(R.layout.layout_splashscreen, null);

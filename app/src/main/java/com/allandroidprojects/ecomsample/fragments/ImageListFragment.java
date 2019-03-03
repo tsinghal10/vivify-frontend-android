@@ -67,7 +67,7 @@ public class ImageListFragment extends Fragment {
     private static RecyclerView rv;
 
     private static int category_position;
-    public static Boolean isLoading[] = {false, false, false, false, false, false};
+    public static Boolean isLoading[] = {false, false, false, false};
     public static SimpleStringRecyclerViewAdapter adapter;
 
     @Override

@@ -35,5 +35,22 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
+//    compile 'com.google.api-client:google-api-client-android:1.22.0'
+//    compile 'com.google.apis:google-api-services-vision:v1-rev357-1.22.0'
+//    compile 'com.google.code.findbugs:jsr305:2.0.1'
+//    compile 'commons-io:commons-io:2.5'
 
+    compile 'com.google.android.gms:play-services-base:9.0.2'
+    compile 'com.google.android.gms:play-services-auth:9.0.2'
+    compile('com.google.apis:google-api-services-vision:v1-rev16-1.22.0') {
+        exclude module: 'httpclient' //by artifact name
+        exclude group: 'org.apache.httpcomponents' //by group
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+    compile('com.google.api-client:google-api-client-android:1.22.0') {
+        exclude module: 'httpclient'
+    }
+    compile('com.google.http-client:google-http-client-gson:1.20.0') {
+        exclude module: 'httpclient'
+    }
 }

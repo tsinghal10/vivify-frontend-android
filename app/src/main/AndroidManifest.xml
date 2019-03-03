@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:name=".startup.FrescoApplication"
@@ -84,7 +85,9 @@
         <activity
             android:name=".options.OrderHistoryActivity"
             android:label="Order History" />
-        <activity android:name=".options.OrderItemList"></activity>
+        <activity android:name=".options.OrderItemList" />
+        <activity android:name=".utility.GoogleVision" />
+        <activity android:name=".options.RecommendActivity"></activity>
     </application>
 
 </manifest>

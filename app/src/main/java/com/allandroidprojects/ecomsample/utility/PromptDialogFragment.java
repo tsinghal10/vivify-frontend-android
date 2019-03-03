@@ -1,11 +1,14 @@
 package com.allandroidprojects.ecomsample.utility;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,7 +16,11 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 
 import com.allandroidprojects.ecomsample.startup.MainActivity;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
+import com.google.api.services.vision.v1.model.Image;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,18 +30,24 @@ public class PromptDialogFragment extends DialogFragment {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int RESULT_LOAD_IMAGE = 100;
+    static final int REQUEST_GALLERY_IMAGE = 100;
+    static final int REQUEST_CODE_PICK_ACCOUNT = 101;
+    static final int REQUEST_ACCOUNT_AUTHORIZATION = 102;
+    static final int REQUEST_PERMISSIONS = 13;
     String currentPhotoPath;
-
+    AccountManager am;
+    private Account mAccount;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
+        am = AccountManager.get(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Get image from?")
                 .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dispatchTakePictureIntent();
-//                        galleryAddPic();
+                        galleryAddPic();
                     }
                 })
                 .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {

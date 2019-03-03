@@ -70,7 +70,7 @@ public interface Api {
 
     @GET("orders/{id}/lines/")
     Call<ResponseBody> get_orders(@Path("id") String id,
-                                     @Query("email") String email);
+                                  @Query("email") String email);
 
     @FormUrlEncoded
     @POST("checkout/")
@@ -79,4 +79,9 @@ public interface Api {
     @GET("orders/")
     Call<ResponseBody> order_list(@Query("email") String email);
 
+    @GET("most_viewed/")
+    Call<ResponseBody> mostly_viewed();
+
+    @GET("recently_viewed/")
+    Call<ResponseBody> recently_viewed(@Query("email") String email);
 }

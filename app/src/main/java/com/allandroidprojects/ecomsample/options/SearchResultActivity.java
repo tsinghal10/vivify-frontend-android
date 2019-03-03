@@ -74,6 +74,9 @@ public class SearchResultActivity extends AppCompatActivity {
         adapter = new SearchAdapter(recyclerView, productInfoArrayList);
         recyclerView.setAdapter(adapter);
         initScrollListener();
+
+//        if (getIntent() != null)
+//            searchView.setQuery(getIntent().getStringExtra("LABELS"), true);
         handleIntent(getIntent());
     }
 
@@ -152,6 +155,15 @@ public class SearchResultActivity extends AppCompatActivity {
             if (query != null) {
                 search_page = 1;
                 isLoading = true;
+                productInfoArrayList.clear();
+                callApi();
+            }
+        } else {
+            query = intent.getStringExtra("LABELS");
+            if (query != null) {
+                search_page = 1;
+                isLoading = true;
+                Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
                 productInfoArrayList.clear();
                 callApi();
             }

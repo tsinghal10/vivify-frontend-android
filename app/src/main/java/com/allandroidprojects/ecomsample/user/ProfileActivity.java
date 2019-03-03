@@ -54,6 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         prefManager.setIsLoggedIn(false);
+                        prefManager.setAuthenticate(false);
                         Toast.makeText(ProfileActivity.this, "Logout Successful", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                         finish();
